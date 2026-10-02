@@ -56,3 +56,15 @@ document.querySelectorAll('.view-switch button').forEach(b=>b.addEventListener('
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setWorkspaceView('inputs')));
 document.querySelector('.result-top a').addEventListener('click',()=>setWorkspaceView('report'));
 tabButtons.forEach((b,i)=>b.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=(i+(e.key==='ArrowDown'?1:-1)+tabButtons.length)%tabButtons.length;tabButtons[n].click();tabButtons[n].focus();}}));
+
+// The handbook is kept outside the calculation inputs and export trace.
+const helpSections=Array.from(document.querySelectorAll('.help-section'));
+function filterHelp(){const q=$('helpSearch').value.trim().toLocaleLowerCase();let count=0;for(const section of helpSections){const matches=!q||section.textContent.toLocaleLowerCase().includes(q);section.hidden=!matches;if(matches){count++;if(q)section.open=true;}}$('helpStatus').textContent=q?(count?`找到 ${count} 個相關章節`:'找不到相關內容，請換個關鍵字。'):`共 ${helpSections.length} 個章節，點選標題展開。`;}
+$('helpSearch').addEventListener('input',filterHelp);
+$('helpClear').addEventListener('click',()=>{$('helpSearch').value='';filterHelp();$('helpSearch').focus();});
+$('helpExpand').addEventListener('click',()=>helpSections.forEach(s=>{if(!s.hidden)s.open=true;}));
+$('helpCollapse').addEventListener('click',()=>helpSections.forEach(s=>s.open=false));
+function syncHelpLayout(){const active=document.querySelector('nav button.active')?.dataset.tab==='help';document.body.classList.toggle('help-active',active);}
+tabButtons.forEach(b=>b.addEventListener('click',syncHelpLayout));
+function openHelpFromHash(){if(location.hash==='#help'){document.querySelector('nav button[data-tab="help"]').click();}}
+window.addEventListener('hashchange',openHelpFromHash);openHelpFromHash();
