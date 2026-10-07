@@ -76,3 +76,4 @@ let pendingScaffoldExample=null;
 document.querySelectorAll('[data-scaffold-example]').forEach(button=>button.addEventListener('click',()=>{pendingScaffoldExample=button.dataset.scaffoldExample;$('exampleLoadPrompt').hidden=false;$('exampleLoadMessage').textContent='將載入範例 '+pendingScaffoldExample+' 並取代目前全部參數。請先匯出要保留的計算書。';$('exampleLoadConfirm').focus();}));
 $('exampleLoadCancel').addEventListener('click',()=>{pendingScaffoldExample=null;$('exampleLoadPrompt').hidden=true;});
 $('exampleLoadConfirm').addEventListener('click',()=>{const key=pendingScaffoldExample;if(!key)return;const next={...SCAFFOLD_EXAMPLES[key]};if(calculate(next,SECTIONS).errors.length)return;current=next;build();$('exampleLoadPrompt').hidden=true;pendingScaffoldExample=null;document.querySelector('nav button[data-tab="geometry"]').click();$('exampleStatus').hidden=false;$('exampleStatus').textContent='已載入教學範例 '+key+'；工程確認框保持未勾選。後續修改會即時更新結果。';window.scrollTo({top:0,behavior:'smooth'});});
+
